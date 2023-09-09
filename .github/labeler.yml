@@ -1,3 +1,6 @@
-- name: Labeler
-  uses: actions/labeler@v4.3.0
+frontend:
+- frontend/**
+
+backend:
+- backend/**
             
