@@ -7,13 +7,9 @@ export default function Home() {
       <h1 className="projectName">SPEED</h1><br />
       <br />
       <form className="block">
-        <h2 className="blockTitle">Login:</h2><br />
-        <label className="inputLabel">Username: </label>
-        <input required id="username" className="inputValue"></input><br />
-        <label className="inputLabel">Password: </label>
-        <input required id="password" className="inputValue"></input><br />
-        <input type='submit' className="button" value="Login"></input>
-    </form>
+        <h2 className="blockTitle">Moderator:</h2><br />
+        <h2 className="blockTitle">[PlaceHolder]</h2>
+      </form>
     </main>
   )
 }

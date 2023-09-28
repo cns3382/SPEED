@@ -6,8 +6,10 @@ export default function Home() {
     <main id="main">
       <h1 className="projectName">SPEED</h1><br />
       <br />
-      <h2 className="blockTitle">Admin:</h2><br />
-      <h1>[PlaceHolder]</h1>
+      <form className="block">
+        <h2 className="blockTitle">Admin:</h2><br />
+        <h2 className="blockTitle">[PlaceHolder]</h2>
+      </form>
     </main>
   )
 }

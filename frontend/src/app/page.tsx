@@ -6,8 +6,8 @@ export default function Home() {
     <main id="main">
       <h1 className="projectName">SPEED</h1><br />
       <br />
-      <a href="./Search"><input type="submit" className="button" value="Search"></input></a><br /><br />
-      <a href="./Login"><input type="submit" className="button" value="Login"></input></a>
+      <a href="./Search"><input type="button" className="button" value="Search" /></a><br /><br />
+      <a href="./Login"><input type="button" className="button" value="Login" /></a>
     </main>
   )
 }
