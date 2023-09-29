@@ -15,7 +15,7 @@ function checkCredentials() {
     } else if (username == "Moderator" && password == "123456") {
       document.getElementById("moderator")?.click();
     } else {
-      document.getElementById("errorMessage")?.innerText
+      (document.getElementById("errorMessage") as HTMLInputElement).value = "Wrong Credentials";
     }
   }
 }
@@ -26,7 +26,7 @@ export default function Home() {
       <h1 className="projectName">SPEED</h1><br />
       <br />
       <form className="block">
-        <h2 className="blockTitle">Login:</h2><br />
+        <h2 className="blockTitle">Staff Login:</h2><br />
         <label className="inputLabel">Username: </label>
         <input required id="username" className="inputValue"></input><br /><br />
         <label className="inputLabel">Password: </label>
