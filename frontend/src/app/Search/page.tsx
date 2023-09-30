@@ -4,6 +4,7 @@ import '../style.css';
 export default function Home() {
   return (
     <main id="main">
+      <a href="/"><input type="button" className="button returnButton" value="Back" /></a>
       <h1 className="projectName">SPEED</h1><br />
       <form className="block">
         <h2 className="blockTitle">Search:</h2><br />

@@ -4,6 +4,7 @@ import '../style.css';
 export default function Home() {
   return (
     <main id="main">
+      <a href="/Login"><input type="button" className="button returnButton" value="Logout" /></a>
       <h1 className="projectName">SPEED</h1><br />
       <br />
       <form className="block">

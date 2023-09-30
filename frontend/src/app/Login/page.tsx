@@ -15,7 +15,7 @@ function checkCredentials() {
     } else if (username == "Moderator" && password == "123456") {
       document.getElementById("moderator")?.click();
     } else {
-      (document.getElementById("errorMessage") as HTMLInputElement).value = "Wrong Credentials";
+      (document.getElementById("errorMessage") as HTMLInputElement).innerHTML = "Wrong Credentials<br /><br />";
     }
   }
 }
@@ -23,6 +23,7 @@ function checkCredentials() {
 export default function Home() {
   return (
     <main id="main">
+      <a href="/"><input type="button" className="button returnButton" value="Back" /></a>
       <h1 className="projectName">SPEED</h1><br />
       <br />
       <form className="block">
@@ -31,9 +32,9 @@ export default function Home() {
         <input required id="username" className="inputValue"></input><br /><br />
         <label className="inputLabel">Password: </label>
         <input required type="password" id="password" className="inputValue"></input><br /><br />
+        <p id="errorMessage" />
         <input type='button' className="button" value="Login" onClick={checkCredentials}></input>
     </form>
-    <p id="errorMessage"></p>
     <div id="tempHiddenLinks" hidden>
       <a id="admin" href='./Admin' />
       <a id="analyst" href='./Analyst' />
