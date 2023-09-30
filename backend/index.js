@@ -8,7 +8,7 @@ const routes = require('./routes/api/articles');
 const app = express();
 
 // Connect Database
-//connectDB();
+connectDB();
 
 // cors
 app.use(cors({ origin: true, credentials: true }));
