@@ -9,16 +9,20 @@ const ArticleSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    authors: {
+      type: String,
+      required: true
+    },
+    source: {
+      type: String,
+      required: true
+    },
+    pubyear: {
+      type: Date,
+      required: true
+    },
     summary: {
       type: String,
-      required: true
-    },
-    author: {
-      type: String,
-      required: true
-    },
-    pub_year: {
-      type: Date,
       required: true
     },
     claim: {
