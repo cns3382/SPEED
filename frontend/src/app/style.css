@@ -1,6 +1,7 @@
 #main {
     background-color: #333333;
-    height: 100vh;
+    height: 100%;
+    min-height: 100vh;
 }
 
 .projectName {
@@ -64,9 +65,33 @@
     position: absolute;
 }
 
-.tableHeader > td {
+.loginButton {
+    float: right;
+    margin: 10px;
+    position: absolute;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#resultsTable {
     color: white;
-    width: calc(100%/8);
     text-align: center;
+}
+
+#resultsTable > tr > th {
     font-size: 20px;
+}
+
+#hideTable {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+}
+
+input[type=checkbox] {
+    height: 20px;
+    width: 20px;
 }
