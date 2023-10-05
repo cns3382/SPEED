@@ -1,7 +1,24 @@
-import Image from 'next/image';
+'use client'
+
 import '../style.css';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [displayColumns, setDisplayColumns] = useState({
+    sePractice : true,
+    paperName : true,
+    summary : true,
+    author : true,
+    pubYear : true,
+    claim : true,
+    evidence : true,
+    result : true
+  });
+
+  const toggleColumn = (col : any) => {
+    console.log(col);
+  }
+
   return (
     <main id="main">
       <a href="/"><input type="button" className="button returnButton" value="Back" /></a>
@@ -18,16 +35,29 @@ export default function Home() {
     </form>
       <br />
       <div id="result">
+        <div className='block'> 
+          <button onClick={() => toggleColumn(displayColumns.sePractice)}> Test </button>
+        </div>
         <table className="block">
           <tr className="tableHeader">
-            <td>SE Practice</td>
-            <td>Paper Name</td>
-            <td>Summary</td>
-            <td>Author</td>
-            <td>Publish Year</td>
-            <td>Claim</td>
-            <td>Evidence</td>
-            <td>Result</td>
+            {displayColumns.sePractice ? <td>SE Practice</td> : undefined}
+            {displayColumns.paperName ? <td>Paper Name</td> : undefined}
+            {displayColumns.summary ? <td>Summary</td> : undefined}
+            {displayColumns.author ? <td>Author</td> : undefined}
+            {displayColumns.pubYear ? <td>Publish Year</td> : undefined}
+            {displayColumns.claim ? <td>Claim</td> : undefined}
+            {displayColumns.evidence ? <td>Evidence</td> : undefined}
+            {displayColumns.result ? <td>Result</td> : undefined}
+          </tr>
+          <tr>
+            {displayColumns.sePractice ? <td> Test Driven Development </td> : undefined}
+            {displayColumns.paperName ? <td> This is a long article name that would test the limits of an HTML table </td> : undefined}
+            {displayColumns.summary ? <td> I dont know how to read </td> : undefined}
+            {displayColumns.author ? <td> J. Yuan </td> : undefined}
+            {displayColumns.pubYear ? <td> 2023 </td> : undefined}
+            {displayColumns.claim ? <td> TDD </td> : undefined}
+            {displayColumns.evidence ? <td> Moderate Support </td> : undefined}
+            {displayColumns.result ? <td> What's this for? </td> : undefined}
           </tr>
         </table>
       </div>
