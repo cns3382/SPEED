@@ -18,7 +18,7 @@ const ArticleSchema = new mongoose.Schema({
       required: true
     },
     pubyear: {
-      type: Date,
+      type: String,
       required: true
     },
     summary: {
@@ -26,13 +26,13 @@ const ArticleSchema = new mongoose.Schema({
       required: true
     },
     claim: {
-      type: String,
+      type: String
     },
     evidence: {
-      type: String,
+      type: String
     },
     result: {
-      type: String,
+      type: String
     }
 })
 module.exports = Article = mongoose.model('accepted_articles', ArticleSchema);
