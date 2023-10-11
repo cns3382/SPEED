@@ -4,6 +4,20 @@ import './style.css';
 
 export default function Home() {
   
+  async function loadData() {
+    console.log("test");
+
+    var dataJson = await fetch('https://speed-test-delta-three.vercel.app/api/articles/all-articles', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json'}}
+        )
+        var dataList = "";
+
+        await dataJson.json().then(result => dataList = result);
+
+        console.log(dataList);
+  }
+
   function toggleColumn(column: number) {
     var array = document.getElementById("resultsTable")!.children;
     for (let index = 0; index < array.length; index++) {
@@ -25,6 +39,7 @@ export default function Home() {
         <label className="inputLabel">Published Year: </label>
         <input type="number" id='inputPublishYear' className="inputValue" max={2030} min={1900}></input><br /><br />
         <input type='submit' className="button" value="Search"></input>
+        <input type='button' className="button" value="TEST" onClick={loadData}></input>
       </form>
       <br />
       <div className="block">
