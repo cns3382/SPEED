@@ -35,4 +35,4 @@ const ArticleSchema = new mongoose.Schema({
       type: String,
     }
 })
-module.exports = Article = mongoose.model('article', ArticleSchema);
+module.exports = Article = mongoose.model('accepted_articles', ArticleSchema);

@@ -9,19 +9,29 @@ const ArticleSubmissionSchema = new mongoose.Schema({
         type : String,
         required: true
     },
+    doi : {
+        type : String,
+        required: true
+    },
     source: {
         type : String,
         required: true
     },
-    pubYear: {
+    pubyear: {
         type : String,
         required: true
     },
-    doi : {
-        type : String,
-    },
     summary : {
+        type : String
+    },
+    name: {
+        type : String
+    },
+    email: {
+        type : String
+    },
+    status: {
         type : String
     }
 })
-module.exports = Article = mongoose.model('articleSubmission', ArticleSubmissionSchema);
+module.exports = Article = mongoose.model('article_submission', ArticleSubmissionSchema);
