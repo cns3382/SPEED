@@ -144,7 +144,7 @@ export default function Home() {
       <a href="/Login"><input type="button" className="button returnButton" value="Login" /></a>
       <h1 className="projectName">SPEED</h1><br />
       <div id="queryBlock" className="block">
-        <input type="button" className="button queryElement" value="Save Current Query" onClick={saveQuery} /><br /><br />
+        <input type="button" className="button queryElement" value="Save Current Query" onClick={saveQuery} /><br />
         <input type="button" className="button queryElement" value="Load Query" onClick={loadQuery} />
         <select required id="savedQueries" className="inputValue queryElement" />
       </div>
