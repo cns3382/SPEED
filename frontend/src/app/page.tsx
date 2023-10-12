@@ -153,7 +153,7 @@ export default function Home() {
     (document.getElementById("inputPublishYear") as HTMLInputElement).value = queryString[2];
   }
 
-  loadStartUpData();
+  if (typeof document !== 'undefined') {loadStartUpData();}
 
   return (
     <main id="main">
