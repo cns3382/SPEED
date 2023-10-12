@@ -22,28 +22,27 @@ export default function Home() {
     )
     await dataJson.json().then(result => dataList = result);
 
-    // Loads all SE Practices
+    // Loads all SE Practices and claims, and fixes publish year values
     var setSEPracticeOptions = "<option value='' />";
     var allSEPractices:string[] = [];
+    var setClaimsOptions = "<option value='' />";
+    var allClaims:string[] = [];
     for (var article = 0; article < dataList.length; article++) {
       var currentPractice = dataList[article].sepractice;
       if (!allSEPractices.includes(currentPractice)) {
         setSEPracticeOptions = setSEPracticeOptions + "<option value='" + currentPractice + "'>" + currentPractice + "</option>"
         allSEPractices.push(currentPractice);
       }
-    }
-    document.getElementById("inputSEPractice")!.innerHTML = setSEPracticeOptions;
 
-    // Loads all claims from each SE Practice
-    var setClaimsOptions = "<option value='' />";
-    var allClaims:string[] = [];
-    for (var article = 0; article < dataList.length; article++) {
       var currentClaim = dataList[article].claim;
       if (!allClaims.includes(currentClaim)) {
         setClaimsOptions = setClaimsOptions + "<option value='" + currentClaim + "'>" + currentClaim + "</option>"
         allClaims.push(currentClaim);
       }
+
+      dataList[article]["pubyear"] = dataList[article]["pubyear"].split("-")[0];
     }
+    document.getElementById("inputSEPractice")!.innerHTML = setSEPracticeOptions;
     document.getElementById("inputClaim")!.innerHTML = setClaimsOptions;
 
     // Loads the saved query data
@@ -54,11 +53,6 @@ export default function Home() {
       setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
     }
     document.getElementById("savedQueries")!.innerHTML = setQueryOptions;
-
-    // Fixes Publish Year Values
-    for (var article = 0; article < dataList.length; article++) {
-      dataList[article]["pubyear"] = dataList[article]["pubyear"].split("-")[0];
-    };
   }
 
   // Loads Search Results
