@@ -12,8 +12,9 @@ export default function Home() {
   var columnHidden = [false, false, false, false, false, false, false, false, false]; // Column Hidden Values
   var queriesStored = 0; // Number of currently stored queries
 
-  // Loads the saved query data when the page first gets loaded
-  function loadLocalData() {
+  // Loads certain data when the page first gets loaded
+  async function loadStartUpData() {
+    // Loads the saved query data
     var setQueryOptions = "";
     queriesStored = window.localStorage.length;
 
@@ -22,6 +23,39 @@ export default function Home() {
       setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
     }
 
+    // Get data from API
+    var dataJson = await fetch('https://speed-test-delta-three.vercel.app/api/articles/all-articles', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json'}}
+    )
+    var dataList:MapType[] = [{["test"]: "test"}];
+    await dataJson.json().then(result => dataList = result);
+
+    // Loads all SE Practices
+    var setSEPracticeOptions = "<option value='' />";
+    var allSEPractices:string[] = [];
+    for (var article = 0; article < dataList.length; article++) {
+      var currentPractice = dataList[article].sepractice;
+      if (!allSEPractices.includes(currentPractice)) {
+        setSEPracticeOptions = setSEPracticeOptions + "<option value='" + currentPractice + "'>" + currentPractice + "</option>"
+        allSEPractices.push(currentPractice);
+      }
+    }
+    document.getElementById("inputSEPractice")!.innerHTML = setSEPracticeOptions;
+
+    // Loads all claims from each SE Practice
+    var setClaimsOptions = "<option value='' />";
+    var allClaims:string[] = [];
+    for (var article = 0; article < dataList.length; article++) {
+      var currentClaim = dataList[article].claim;
+      if (!allClaims.includes(currentClaim)) {
+        setClaimsOptions = setClaimsOptions + "<option value='" + currentClaim + "'>" + currentClaim + "</option>"
+        allClaims.push(currentClaim);
+      }
+    }
+    document.getElementById("inputClaim")!.innerHTML = setClaimsOptions;
+
+    // Wait a bit before loading saved queries
     document.getElementById("savedQueries")!.innerHTML = setQueryOptions;
   }
 
@@ -139,21 +173,23 @@ export default function Home() {
     (document.getElementById("inputPublishYear") as HTMLInputElement).value = queryString[2];
   }
 
+  loadStartUpData();
+
   return (
-    <main id="main" onLoad={loadLocalData}>
+    <main id="main">
       <a href="/Login"><input type="button" className="button returnButton" value="Login" /></a>
-      <h1 className="projectName">SPEED</h1><br />
+      <h1 className="projectName">SPEED</h1>
       <div id="queryBlock" className="block">
         <input type="button" className="button queryElement" value="Save Current Query" onClick={saveQuery} /><br />
         <input type="button" className="button queryElement" value="Load Query" onClick={loadQuery} />
-        <select required id="savedQueries" className="inputValue queryElement" />
+        <select required id="savedQueries" className="inputValue queryElement"></select>
       </div>
       <form className="block">
-        <h1 className="blockTitle">Search:</h1><br />
+        <h1 className="blockTitle">Search:</h1>
         <label className="inputLabel">SE Practice: </label>
-        <select required id="inputSEPractice" className="inputValue"><option value="" /><option value="??">??</option><option value="Practice_1">Practice_1</option><option value="Practice_2">Practice_2</option><option value="Practice_3">Practice_3</option><option value="Practice_4">Practice_4</option></select><br />
+        <select required id="inputSEPractice" className="inputValue"></select><br />
         <label className="inputLabel">Claim: </label>
-        <select required id="inputClaim" className="inputValue"><option value="" /><option value="Claim_1">Claim_1</option><option value="Claim_2">Claim_2</option><option value="Claim_3">Claim_3</option><option value="Claim_4">Claim_4</option></select><br />
+        <select required id="inputClaim" className="inputValue"></select><br />
         <label className="inputLabel">Published Year: </label>
         <input type="number" id='inputPublishYear' className="inputValue" max={2030} min={1900} /><br /><br />
         <input id="searchButton" type='button' className="button" value="Search" onClick={loadData} />
