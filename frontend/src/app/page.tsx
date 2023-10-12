@@ -11,7 +11,8 @@ export default function Home() {
   // Global Variables
   var columnHidden = [false, false, false, false, false, false, false, false, false]; // Column Hidden Values
   var queriesStored = 0; // Number of currently stored queries
-
+  var dataList:MapType[] = [{["test"]: "test"}]; // List of all articles
+  
   // Loads certain data when the page first gets loaded
   async function loadStartUpData() {
     // Get data from API
@@ -19,7 +20,6 @@ export default function Home() {
       method: 'GET',
       headers: { 'Content-Type': 'application/json'}}
     )
-    var dataList:MapType[] = [{["test"]: "test"}];
     await dataJson.json().then(result => dataList = result);
 
     // Loads all SE Practices
@@ -54,6 +54,11 @@ export default function Home() {
       setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
     }
     document.getElementById("savedQueries")!.innerHTML = setQueryOptions;
+
+    // Fixes Publish Year Values
+    for (var article = 0; article < dataList.length; article++) {
+      dataList[article]["pubyear"] = dataList[article]["pubyear"].split("-")[0];
+    };
   }
 
   // Loads Search Results
@@ -69,19 +74,6 @@ export default function Home() {
     var setHTML = "<tr id='resultsTableHeader'>" + document.getElementById("resultsTableHeader")?.innerHTML + "</tr>";
     var initialHTML = setHTML;
     var columnNum = document.getElementById("resultsTableHeader")!.childElementCount;
- 
-    // Get data from API
-    var dataJson = await fetch('https://speed-test-delta-three.vercel.app/api/articles/all-articles', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json'}}
-    )
-    var dataList:MapType[] = [{["test"]: "test"}];
-    await dataJson.json().then(result => dataList = result);
-
-    // Fixes Publish Year Values
-    for (var article = 0; article < dataList.length; article++) {
-      dataList[article]["pubyear"] = dataList[article]["pubyear"].split("-")[0];
-    };
 
     // Sorts dataList by user inputs
     var newDataList:MapType[] = [];
@@ -104,9 +96,6 @@ export default function Home() {
 
     setHTML += convertDataToTable(newDataList, columnNum);
 
-    console.log(dataList);
-    console.log(setHTML);
-
     // Loads information into table
     document.getElementById("resultsTable")!.innerHTML = setHTML;
     if (setHTML != initialHTML) { // If relevant articles are found
@@ -124,14 +113,14 @@ export default function Home() {
   }
 
   // Prepares information by placing them in proper table format
-  function convertDataToTable(dataList:MapType[], columnNum:number) {
+  function convertDataToTable(newDataList:MapType[], columnNum:number) {
     var returnString = "";
     var articleAPIElements = ["sepractice", "title", "summary", "authors", "pubyear", "claim", "evidence", "result", "doi"];
 
-    for (var article = 0; article < dataList.length; article++) {
+    for (var article = 0; article < newDataList.length; article++) {
       returnString += "<tr>";
       for (var element = 0; element < columnNum; element++) {
-        var elementResult = dataList[article][articleAPIElements[element]];
+        var elementResult = newDataList[article][articleAPIElements[element]];
         returnString += "<td " + (columnHidden[element] ? "hidden" : "") + ">" + (articleAPIElements[element] == "doi" ? "<a href='" + elementResult + "'>" : "") + elementResult + (articleAPIElements[element] == "doi" ? "</a>" : "") + "</td>";
       }
       returnString += "</tr>";
