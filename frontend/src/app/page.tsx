@@ -14,15 +14,6 @@ export default function Home() {
 
   // Loads certain data when the page first gets loaded
   async function loadStartUpData() {
-    // Loads the saved query data
-    var setQueryOptions = "";
-    queriesStored = window.localStorage.length;
-
-    for (var i = 1; i <= window.localStorage.length; i++) {
-      var query = window.localStorage.getItem(i as unknown as string);
-      setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
-    }
-
     // Get data from API
     var dataJson = await fetch('https://speed-test-delta-three.vercel.app/api/articles/all-articles', {
       method: 'GET',
@@ -55,7 +46,13 @@ export default function Home() {
     }
     document.getElementById("inputClaim")!.innerHTML = setClaimsOptions;
 
-    // Wait a bit before loading saved queries
+    // Loads the saved query data
+    var setQueryOptions = "";
+    queriesStored = window.localStorage.length;
+    for (var i = 1; i <= window.localStorage.length; i++) {
+      var query = window.localStorage.getItem(i as unknown as string);
+      setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
+    }
     document.getElementById("savedQueries")!.innerHTML = setQueryOptions;
   }
 
