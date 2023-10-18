@@ -51,11 +51,17 @@
     padding: 5px;
 }
 
+.inputs {
+    color: black;
+    width: 250px;
+}
+
 .analysis-button {
     margin-inline-end: 5px;
     margin-top: 10px;
     padding-inline: 10px;
 }
+
 ul {
     padding-top: 25px;
     padding-right: 20px;

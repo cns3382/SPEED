@@ -6,28 +6,6 @@ import AcceptedArticles from './AcceptedArticles';
 import { useState, useEffect } from 'react';
 import ArticleAnalysis from './ArticleAnalysis';
 
-const test_articles = [
-  {
-    "_id":{"$oid":"6525fba34e88c7028376e2f7"},
-    "title":"Svarog's Study on Test Driven Development",
-    "authors":"Svarog",
-    "doi":"http://BecauseWeAreFamily.com",
-    "source":"Ten Lords Commission?",
-    "summary" : "TDD = Belebog Safe",
-    "pubyear":"7530",
-    "__v":{"$numberInt":"0"}
-  },
-  {
-    "_id":{"$oid":"6525fba34e88c7028376e2f8"},
-    "title":"Cloud Knights Development Doctrine v4",
-    "authors":"Jingliu",
-    "doi":"http://JingliuFoldsYanqing.com",
-    "source":"Ten Lords Commission?",
-    "pubyear":"7566",
-    "summary" : "Yanqing shud be villain at this point",
-    "__v":{"$numberInt":"0"}
-  },
-]
 
 export default function Home() {
   const [ArticleSubmissions, setSubmissionList] = useState<any>([]);
@@ -36,15 +14,19 @@ export default function Home() {
 
   useEffect(() => {
     // Get article submissions data
-    axios.get('http://localhost:8082/api/articles/article-submissions')
+    getSubmissions();
+  }, [])
+
+  const getSubmissions = () => {
+    axios.get('https://speed-test-delta-three.vercel.app/api/articles/article-submissions')
         .then((res) => {
-          // Filter for pending articles
+          // Filter for articles pending analysis
           setSubmissionList(res.data.filter((submission: { status: string; }) => submission.status === 'pending-analysis'))
         })
         .catch((err) => {
-          console.log("Error from Analyst page.tsx");
+          console.log("Error loading article submissions in Analyst page.tsx");
         })
-  }, [])
+  }
 
   const goBack = () => {
     setSelected(null);
@@ -60,6 +42,36 @@ export default function Home() {
     showArticle();
   }
 
+  const finishAnalysis = (articleData : any, claim : any, evidence : any, se_practice : any, result : any) => {
+    const newArticle = {
+        _id: articleData._id,
+        title: articleData.title,
+        authors: articleData.authors,
+        doi: articleData.doi,
+        pubyear: articleData.pubyear,
+        claim: claim,
+        evidence: evidence,
+        se_practice: se_practice,
+        result: result,
+        summary: articleData.summary,
+    }
+
+    axios.post("https://speed-test-delta-three.vercel.app/api/articles/all-articles", newArticle)
+    .catch((err) => {
+      console.log("Error submitting article in Analyst page.tsx");
+    })
+
+    articleData.status = "accepted"
+    axios.put("https://speed-test-delta-three.vercel.app/api/articles/article-submissions/" + articleData._id, articleData)
+    .then((res) => {
+      getSubmissions();
+      goBack();
+    })
+    .catch((err) => {
+      console.log("Error occured in Analyst page.tsx");
+    })
+}
+
   return (
     <main id="main">
       <a href="/Login"><input type="button" className="button returnButton" value="Logout" /></a>
@@ -68,7 +80,7 @@ export default function Home() {
       <form className="block">
         <h2 className="blockTitle">Analyst:</h2><br />
         { PageState === "list" ? <AcceptedArticles data={ArticleSubmissions} analyseArticle={analyseArticle}/> : null }
-        { PageState === "analysis" ? <ArticleAnalysis goBack={goBack} articleData={selected}/> : null}
+        { PageState === "analysis" ? <ArticleAnalysis goBack={goBack} articleData={selected} finishAnalysis={finishAnalysis}/> : null}
       </form>
     </main>
   )
