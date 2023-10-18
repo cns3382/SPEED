@@ -7,11 +7,9 @@ export default function Home() {
       <a href="/Login"><input type="button" className="button returnButton" value="Logout" /></a>
       <h1 className="projectName">SPEED</h1><br />
       <br />
-          <form className="block">
-              <a href="/Accept"><input type="button" className="button returnButton" value="Accept" /></a> 
+      <form className="block">
         <h2 className="blockTitle">Moderator:</h2><br />
-              <h2 className="blockTitle">[PlaceHolder]</h2>
-              <a href="/Decline"><input type="button" className="button returnButton" value="Decline" /></a>
+        <h2 className="blockTitle">[PlaceHolder]</h2>
       </form>
     </main>
   )

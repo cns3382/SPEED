@@ -22,15 +22,6 @@ app.get('/', (req, res) => res.send('Hello world!'));
 
 app.use('/api/articles', articles);
 app.use('/api', routes);
-app.use('/user', UserRouter);
-
-const bodyParser = require("express");
-app.use(bodyParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "./views/index.html"));
-});
 
 const port = process.env.PORT || 8082;
 
