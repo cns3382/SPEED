@@ -1,112 +1,227 @@
-import Image from 'next/image'
+'use client'
+
+import './style.css';
 
 export default function Home() {
+  // Map DataType
+  type MapType = { 
+    [id: string]: string; 
+  }
+
+  // Global Variables
+  var columnHidden = [false, false, false, false, false, false, false, false, false]; // Column Hidden Values
+  var queriesStored = 0; // Number of currently stored queries
+  var dataList:MapType[] = [{["test"]: "test"}]; // List of all articles
+  
+  // Loads certain data when the page first gets loaded
+  async function loadStartUpData() {
+    // Get data from API
+    var dataJson = await fetch('https://speed-test-delta-three.vercel.app/api/articles/all-articles', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json'}}
+    )
+    await dataJson.json().then(result => dataList = result);
+
+    // Loads all SE Practices and claims, and fixes publish year values
+    var setSEPracticeOptions = "<option value='' />";
+    var allSEPractices:string[] = [];
+    var setClaimsOptions = "<option value='' />";
+    var allClaims:string[] = [];
+    for (var article = 0; article < dataList.length; article++) {
+      var currentPractice = dataList[article].sepractice;
+      if (!allSEPractices.includes(currentPractice)) {
+        setSEPracticeOptions = setSEPracticeOptions + "<option value='" + currentPractice + "'>" + currentPractice + "</option>"
+        allSEPractices.push(currentPractice);
+      }
+
+      var currentClaim = dataList[article].claim;
+      if (!allClaims.includes(currentClaim)) {
+        setClaimsOptions = setClaimsOptions + "<option value='" + currentClaim + "'>" + currentClaim + "</option>"
+        allClaims.push(currentClaim);
+      }
+
+      dataList[article]["pubyear"] = dataList[article]["pubyear"].split("-")[0];
+    }
+    document.getElementById("inputSEPractice")!.innerHTML = setSEPracticeOptions;
+    document.getElementById("inputClaim")!.innerHTML = setClaimsOptions;
+
+    // Loads the saved query data
+    var setQueryOptions = "";
+    queriesStored = window.localStorage.length;
+    for (var i = 1; i <= window.localStorage.length; i++) {
+      var query = window.localStorage.getItem(i as unknown as string);
+      setQueryOptions = setQueryOptions + "<option value='" + query + "'>" + query + "</option>"
+    }
+    document.getElementById("savedQueries")!.innerHTML = setQueryOptions;
+  }
+
+  // Loads Search Results
+  async function loadData() {
+    // Hides results and search button, and shows loading phrase
+    document.getElementById("queryResults")!.style.display = "none";
+    document.getElementById("noResults")!.style.display = "none";
+    document.getElementById("resultsTable")!.style.display = "none";
+    document.getElementById("searchButton")!.hidden = true;
+    document.getElementById("loading")!.hidden = false;
+
+    // Initial header and column information
+    var setHTML = "<tr id='resultsTableHeader'>" + document.getElementById("resultsTableHeader")?.innerHTML + "</tr>";
+    var initialHTML = setHTML;
+    var columnNum = document.getElementById("resultsTableHeader")!.childElementCount;
+
+    // Sorts dataList by user inputs
+    var newDataList:MapType[] = [];
+    var dataListElements = ["sepractice", "claim", "pubyear"];
+    var userInputArticleAPIElements = ["inputSEPractice", "inputClaim", "inputPublishYear"];
+    for (var article = 0; article < dataList.length; article++) {
+      var checkValidNum = 0;
+
+      for (var element = 0; element < dataListElements.length; element++) {
+        var userElementInput = (document.getElementById(userInputArticleAPIElements[element]) as HTMLInputElement).value;
+        if (dataList[article][dataListElements[element]] == userElementInput || userElementInput == "") {
+          checkValidNum++;
+        }
+      };
+
+      if (userInputArticleAPIElements.length == checkValidNum) {
+        newDataList.push(dataList[article]);
+      }
+    };
+
+    setHTML += convertDataToTable(newDataList, columnNum);
+
+    // Loads information into table
+    document.getElementById("resultsTable")!.innerHTML = setHTML;
+    if (setHTML != initialHTML) { // If relevant articles are found
+      document.getElementById("noResults")!.style.display = "none";
+      document.getElementById("resultsTable")!.style.display = "block";
+    } else { // If no relevant articles are found
+      document.getElementById("noResults")!.style.display = "block";
+      document.getElementById("resultsTable")!.style.display = "none";
+    }
+    document.getElementById("queryResults")!.style.display = "block";
+
+    // Hides loading phrase and shows search button
+    document.getElementById("searchButton")!.hidden = false;
+    document.getElementById("loading")!.hidden = true;
+  }
+
+  // Prepares information by placing them in proper table format
+  function convertDataToTable(newDataList:MapType[], columnNum:number) {
+    var returnString = "";
+    var articleAPIElements = ["sepractice", "title", "summary", "authors", "pubyear", "claim", "evidence", "result", "doi"];
+
+    for (var article = 0; article < newDataList.length; article++) {
+      returnString += "<tr>";
+      for (var element = 0; element < columnNum; element++) {
+        var elementResult = newDataList[article][articleAPIElements[element]];
+        returnString += "<td " + (columnHidden[element] ? "hidden" : "") + ">" + (articleAPIElements[element] == "doi" ? "<a href='" + elementResult + "'>" : "") + elementResult + (articleAPIElements[element] == "doi" ? "</a>" : "") + "</td>";
+      }
+      returnString += "</tr>";
+    };
+
+    return returnString;
+  }
+
+  // Toggles the column based on the number given
+  function toggleColumn(column: number) {
+    var array = document.getElementById("resultsTable")!.children.item(0)!.children;
+    columnHidden[column] = !columnHidden[column];
+    for (let index = 0; index < array.length; index++) {
+      var element = array[index].children.item(column) as HTMLElement;
+      element.hidden = !element.hidden;
+    }
+  };
+
+  // Saves a query to local storage
+  function saveQuery() {
+    var queryString = "";
+    queryString += (document.getElementById("inputSEPractice") as HTMLInputElement).value + ", ";
+    queryString += (document.getElementById("inputClaim") as HTMLInputElement).value + ", ";
+    queryString += (document.getElementById("inputPublishYear") as HTMLInputElement).value;
+
+    window.localStorage.setItem((queriesStored + 1) + "", queryString);
+    document.getElementById("savedQueries")!.innerHTML = document.getElementById("savedQueries")!.innerHTML + "<option value='" + queryString + "'>" + queryString + "</option>"
+  }
+
+  // Loads a query from local storage
+  function loadQuery() {
+    var queryString = (document.getElementById("savedQueries") as HTMLInputElement).value.split(", ");
+    
+    (document.getElementById("inputSEPractice") as HTMLInputElement).value = queryString[0];
+    (document.getElementById("inputClaim") as HTMLInputElement).value = queryString[1];
+    (document.getElementById("inputPublishYear") as HTMLInputElement).value = queryString[2];
+  }
+
+  if (typeof document !== 'undefined') {loadStartUpData();}
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <main id="main">
+      <a href="/Login"><input type="button" className="button returnButton" value="Login" /></a>
+      <h1 className="projectName">SPEED</h1>
+      <div id="queryBlock" className="block">
+        <input type="button" className="button queryElement" value="Save Current Query" onClick={saveQuery} /><br />
+        <input type="button" className="button queryElement" value="Load Query" onClick={loadQuery} />
+        <select required id="savedQueries" className="inputValue queryElement"></select>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <form className="block">
+        <h1 className="blockTitle">Search:</h1>
+        <label className="inputLabel">SE Practice: </label>
+        <select required id="inputSEPractice" className="inputValue"></select><br />
+        <label className="inputLabel">Claim: </label>
+        <select required id="inputClaim" className="inputValue"></select><br />
+        <label className="inputLabel">Published Year: </label>
+        <input type="number" id='inputPublishYear' className="inputValue" max={2030} min={1900} /><br /><br />
+        <input id="searchButton" type='button' className="button" value="Search" onClick={loadData} />
+        <h1 id="loading" className="blockTitle" hidden>Loading...</h1>
+      </form>
+      <br />
+      <div className="block">
+        <table id="hideTable">
+          <tbody>
+          <tr>
+            <th>Hide SE Practice?</th>
+            <th>Hide Paper Name?</th>
+            <th>Hide Summary?</th>
+            <th>Hide Author?</th>
+            <th>Hide Publish Year?</th>
+            <th>Hide Claim?</th>
+            <th>Hide Evidence?</th>
+            <th>Hide Result?</th>
+            <th>Hide DOI?</th>
+          </tr>
+          <tr>
+            <td><input type="checkbox" onClick={() => toggleColumn(0)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(1)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(2)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(3)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(4)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(5)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(6)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(7)} /></td>
+            <td><input type="checkbox" onClick={() => toggleColumn(8)} /></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <br />
+      <div id="queryResults" className="block">
+        <h1 id="noResults" className="blockTitle">No Results Found!</h1>
+        <table id="resultsTable">
+          <tbody>
+          <tr id="resultsTableHeader">
+            <th>SE Practice</th>
+            <th>Paper Name</th>
+            <th>Summary</th>
+            <th>Author</th>
+            <th>Publish Year</th>
+            <th>Claim</th>
+            <th>Evidence</th>
+            <th>Result</th>
+            <th>DOI</th>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </main>
   )
