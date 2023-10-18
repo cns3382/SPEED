@@ -1,62 +1,61 @@
-.pending-articles-block {
+.accepted-articles-block {
     overflow-y: scroll;
     height: 500px;
 }
 
-.pending-articles-header {
+.accepted-articles-header {
     padding: 15px 15px;
     font-weight: bold;
     background-color: #171717;
 }
-.pending-articles-item {
+.accepted-articles-item {
     padding: 12px 12px;
     cursor: pointer;
     background-color: #171717;
 }
-.pending-articles-item:hover {
+.accepted-articles-item:hover {
     background-color: #4a4848;
 }
 
-.pending-col-1 {
+.accepted-col-1 {
     flex-basis: 40%;
 }
 
-.pending-col-2 {
+.accepted-col-2 {
     flex-basis: 40%;
 }
 
-.pending-col-3 {
+.accepted-col-3 {
     flex-basis: 20%;
 }
 
-.article-mod-block {
+.article-analysis-block {
     background-color: #171717;
     padding: 15px 15px;
     border-radius: 10px;
 }
 
-.mod-item {
+.analysis-item {
     font-size: 20px;
     padding: 5px;
 }
 
-.mod-summary {
+.analysis-summary {
     padding: 5px;
     margin-bottom: 10px;
 }
 
-.mod-buttons {
+.analysis-buttons {
     display: flex;
     justify-content: left;
     padding: 5px;
 }
 
-.mod-button {
+.analysis-button {
     margin-inline-end: 5px;
     margin-top: 10px;
     padding-inline: 10px;
 }
-
 ul {
     padding-top: 25px;
     padding-right: 20px;
