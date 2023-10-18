@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\app",
+    "\\frontend\\src\\app\\Admin",
+    "\\frontend\\src\\app\\Analyst",
+    "\\frontend\\src\\app\\Login",
+    "\\frontend\\src\\app\\Moderator"
+  ],
+  "SelectedNode": "\\backend\\index.js",
+  "PreviewInSolutionExplorer": false
+}

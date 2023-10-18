@@ -220,7 +220,8 @@ export default function Home() {
           </tr>
           </tbody>
         </table>
-      </div>
+          </div>
+          <a href="/Articles"><input type="button" className="button returnButton" value="Insert Article" /></a>
       <br />
       <div id="queryResults" className="block">
         <h1 id="noResults" className="blockTitle">No Results Found!</h1>
