@@ -1,25 +1,8 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
-const port = 8082;
-
-const path = require("path");
-app.use(express.static("views"));
-
-const cors = require('cors');
-app.use(cors());
-
-const bodyParser = require("express");
-app.use(bodyParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const nodemailer = require("nodemailer");
-
 const transporter = nodemailer.createTransport({
     service: "gmail", // Use a colon, not an equal sign
     auth: {
         user: 'cloudtechnology8@gmail.com',
-        pass: 'FiletoFish48'
+        pass: 'wodm vrhh iubf uucz'
     }
 });
 
