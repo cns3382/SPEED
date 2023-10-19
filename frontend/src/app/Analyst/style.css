@@ -1,0 +1,82 @@
+.accepted-articles-block {
+    overflow-y: scroll;
+    height: 500px;
+}
+
+.accepted-articles-header {
+    padding: 15px 15px;
+    font-weight: bold;
+    background-color: #171717;
+}
+.accepted-articles-item {
+    padding: 12px 12px;
+    cursor: pointer;
+    background-color: #171717;
+}
+.accepted-articles-item:hover {
+    background-color: #4a4848;
+}
+
+.accepted-col-1 {
+    flex-basis: 40%;
+}
+
+.accepted-col-2 {
+    flex-basis: 40%;
+}
+
+.accepted-col-3 {
+    flex-basis: 20%;
+}
+
+.article-analysis-block {
+    background-color: #171717;
+    padding: 15px 15px;
+    border-radius: 10px;
+}
+
+.analysis-item {
+    font-size: 20px;
+    padding: 5px;
+}
+
+.analysis-summary {
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.analysis-buttons {
+    display: flex;
+    justify-content: left;
+    padding: 5px;
+}
+
+.inputs {
+    color: black;
+    width: 250px;
+}
+
+.analysis-button {
+    margin-inline-end: 5px;
+    margin-top: 10px;
+    padding-inline: 10px;
+}
+
+ul {
+    padding-top: 25px;
+    padding-right: 20px;
+    padding-bottom: 25px;
+}
+li {
+    border-radius: 5px;
+    display: flex;
+    justify-content: left;
+    margin-bottom: 5px;
+}
+
+button {
+    border-color: white;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 2.5px;
+}
