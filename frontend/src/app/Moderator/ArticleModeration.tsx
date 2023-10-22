@@ -24,7 +24,7 @@ const ArticleModeration : React.FC<Moderation> = ({ goBack, articleData, acceptA
             </div>
             <div className='mod-buttons'>
                 <button className='mod-button' onClick={() => acceptArticle(articleData)}> Accept </button>
-                <button className='mod-button' onClick={() => deleteArticle(articleData)}> Reject </button>
+                <button className='mod-button' onClick={() => rejectArticle(articleData)}> Reject </button>
                 <button className='mod-button' onClick={() => deleteArticle(articleData)}> Delete </button>
             </div>
         </div>
