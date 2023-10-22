@@ -11,7 +11,6 @@ export default function Home() {
   const [selected, setSelected] = useState(Object);
   const [PageState, setPageState] = useState("list");
 
-
   useEffect(() => {
     // Get article submissions data
     getSubmissions();
@@ -42,22 +41,57 @@ export default function Home() {
     setPageState("list");
   }
 
+    const sendEmail = (email : String) => {
+        const send_email = {
+          from: "cloudtechnology8@gmail.com",
+          to: email,
+          subject: "Test",
+          message: "Ur article has been rejected!"
+      }
+      axios.post("https://speed-test-delta-three.vercel.app/send_email", send_email)
+          .then((res) => {
+              console.log("Email sent");
+          })
+          .catch((err) => {
+              console.log('Error sending email in Moderator page.tsx');
+          });
+  }
   const acceptArticle = (data : any) => {
     data.status = "pending-analysis";
     axios.put("https://speed-test-delta-three.vercel.app/api/articles/article-submissions/" + data._id, data)
         .then((res) => {
+          sendEmail(data.email)
           getSubmissions();
           goBack();
         })
         .catch((err) => {
           console.log('Error accepting article in Moderator page.tsx');
         });
-  }
+    }
+
+    const sendEmail2 = (email: String) => {
+        const send_email2 = {
+            from: "cloudtechnology8@gmail.com",
+            to: email,
+            subject: "Test",
+            message: "Ur article has been declined!"
+        }
+        axios.post("https://speed-test-delta-three.vercel.app/send_email", send_email2)
+            .then((res) => {
+                console.log("Email sent");
+            })
+            .catch((err) => {
+                console.log('Error sending email in Moderator page.tsx');
+            });
+    }
+
+
 
   const rejectArticle = (data : any) => {
     data.status = "rejected";
     axios.put("https://speed-test-delta-three.vercel.app/api/articles/article-submissions/" + data._id, data)
         .then((res) => {
+          sendEmail2(data.email)
           getSubmissions();
           goBack();
         })
